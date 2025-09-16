@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  Function:
+    Runtime: nodejs18.x
+    Handler: app.lambdaHandler
+    Timeout: 5
+    Environment:
+      Variables:
+        STAGE:
+          Ref: StageName
+Resources:
+  HelloFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Fn::Sub: hello-${StageName}
+      CodeUri: HelloFunction
+      Events:
+        HelloApi:
+          Type: Api
+          Properties:
+            Path: /hello
+            Method: get
+    Metadata:
+      SamResourceId: HelloFunction
+Parameters:
+  StageName:
+    Type: String
+    Default: dev
