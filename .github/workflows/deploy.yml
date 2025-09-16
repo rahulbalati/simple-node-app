@@ -43,7 +43,7 @@ jobs:
       - name: Deploy SAM
         run: |
           if [ "${GITHUB_REF##*/}" == "dev" ]; then
-            sam deploy --config-file samconfig-dev.toml --no-confirm-changeset
+            sam deploy --config-file samconfig.toml --no-confirm-changeset
           elif [ "${GITHUB_REF##*/}" == "qa" ]; then
             sam deploy --config-file samconfig-qa.toml --no-confirm-changeset
           fi
