@@ -1,0 +1,50 @@
+name: SAM Deploy
+
+# Step 5.1: Trigger workflow on push to dev or qa branches
+on:
+  push:
+    branches:
+      - dev
+      - qa
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 5.2: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 5.3: Configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      # Step 5.4: Install SAM CLI
+      - name: Install SAM CLI
+        run: |
+          pip install --upgrade aws-sam-cli
+
+      # Step 5.5: Install Node.js dependencies
+      - name: Install Node.js dependencies
+        run: |
+          npm install
+
+      # Step 5.6: Build SAM
+      - name: Build SAM
+        run: |
+          sam build
+
+      # Step 5.7: Deploy SAM based on branch
+      - name: Deploy SAM
+        run: |
+          if [ "${GITHUB_REF##*/}" == "dev" ]; then
+            sam deploy --config-file samconfig-dev.toml --no-confirm-changeset
+          elif [ "${GITHUB_REF##*/}" == "qa" ]; then
+            sam deploy --config-file samconfig-qa.toml --no-confirm-changeset
+          fi
+

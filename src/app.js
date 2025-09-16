@@ -3,7 +3,7 @@ exports.lambdaHandler = async (event) => {
     return {
         statusCode: 200,
         body: JSON.stringify({
-             message: `Hello from ${process.env.STAGE} environment! Updated at ${new Date().toISOString()}`,
+             message: `Hello from ${process.env.STAGE} environment! dev bracnhc}`,
         }),
     };
 };
